@@ -1,0 +1,117 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+
+\title{\textbf{The Simple Linear Regression: Formula Derivation}}
+\author{Hongjian YUAN}
+\date{May 2020}
+\begin{document}
+\maketitle
+\section{Introduction}
+Simple Linear Regression(SLR) is a statistical method that allows us to summarize and study relationships between two continuous (quantitative) variables: One variable, denoted x, is regarded as the predictor, explanatory, or independent variable; The other variable, denoted y, is regarded as the response, outcome, or dependent variable. ~\cite{online.stat.psu.edu}
+\section{Prerequisite of Derivation}
+
+\subsection{Convex Function and Concave Function(Binary)} ~\cite{kaplan2011maxima}
+Specific tests for convexity of Binary functions:
+Let:
+\begin{equation}
+a = f_{xx}; b =f_{xy}; c = f_{yy}
+\end{equation}
+Then:\newline \textit{f is convex for \textbf{D} when $ a < 0 $ and $ac-b^2 >= 0 $;\newline f is concave for \textbf{D }when \( a > 0\) and $ ac-b^2 >=0 $}.\
+\subsection{Partial Derivative and Minima \& Maxima}
+Let \textit{f} be a function with two variables with continuous second order partial derivatives $  f_{xx} $, $ f_{yy} $ and $ f_{xy}$ at a critical point (a,b). Let:
+
+\begin{equation}
+D = f_{xx}(a,b) f_{yy}(a,b) - f_{xy}^{2}(a,b)
+\end{equation}
+a) If $ D > 0 $ and $ f_{xx} (a,b) > 0 $, then $ f $ has a relative minimum at $(a,b)$.\newline
+b) If $ D > 0$ and $f_{xx} (a,b) < 0$, then $f$ has a relative maximum at $(a,b)$.\newline 
+c) If $D < 0$, then $f$ has a saddle point at $(a,b)$.\newline
+d) If $D = 0$, then no conclusion can be drawn.
+
+\section{Process of Derivation} ~\cite{machinelearning}
+\subsection{Convexity of Loss Function}
+\textbf{Proof.}\newline 
+\begin{equation}
+E(w, b) = \sum_{i = 1}^m (y_i - f(x_i))^2 = \sum_{i = 1}^m (y_i - wx_i - b )^2
+\end{equation}
+\begin{equation}
+\frac{\partial E(w, b) }{\partial w}\ = \sum_{i = 1}^m \frac{\partial}{\partial w}  (y_i - wx_i - b)^2 \newline\ = \sum_{i = 1}^m \times 2 (y_i - wx_i - b)(-x_i) = 2(w \sum_{i = 1}^m x_i^2 - \sum_{i = 1}^m (y_i - b)x_i)
+\end{equation}
+From (1): \newline
+\begin{equation}
+a = \frac{\partial^2 E(w, b) }{\partial w^2} = 2 \sum_{i = 1}^m x_i^2 
+\end{equation}
+\begin{equation}
+b = \frac{\partial^2 E(w, b) }{\partial w \partial b} = 2 \sum_{i = 1}^m x_i 
+\end{equation}
+\begin{equation}
+c = \frac{\partial^2 E(w, b) }{\partial b^2} = 2m
+\end{equation}
+From (5)(6)(7):
+\begin{equation}
+ac - b^2 = 4m\times \sum_{i = 1}^m x_i^2 - 4\sum_{i = 1}^m x_i^2
+= 4(m-1) \sum_{i-1}^m x_i^2 \ge 0 
+\end{equation}
+From (5), we can easily know that $ \textit{a} \ge 0 $, therefore we can conclude that \textbf{the loss function is convex}.
+\subsection{Formula Derivation of optimized \textit{b}}
+\begin{equation}
+\frac{\partial E(w, b)}{\partial b} =\sum_{i=1}^m \frac{\partial}{\partial b} (y_i-wx_i-b)^2 = \sum_{i=1}^m 2(y_i-wx_i-b)(-1) = 2(w\sum_{i = 1}^m x_i - \sum_{i = 1}^m (yi-b))
+\end{equation}
+Let(9) = 0, then:
+\begin{equation}
+b = \frac{1}{m}\sum_{i=1}^m (y_i - wx_i) = \bar{y}-w\bar{x}
+\end{equation}
+
+
+\subsection{Formula Derivation of optimized \textit{w}}
+\begin{equation}
+\frac{\partial E(w, b)}{\partial w} = 2(w \sum_{i = 1}^m x_i^2 - \sum_{i = 1}^m (y_i - b)x_i)
+\end{equation}
+Let(11) = 0, from also (10), then:
+\begin{equation}
+w \sum_{i = 1}^m x_i^2 - \sum_{i=1}^m x_i y_i + \sum_{i=1}^m x_i(\bar{y} - w\bar{x}) = 0 
+\end{equation}
+\[w(\sum_{i=1}^m x_i^2-\sum_{i=1}^m x_i \bar{x}) = \sum_{i=1}^m x_i y_i - \sum_{i=1}^m x_i \bar{y}\]
+\[w = \frac{\sum_{i=1}^m x_i y_i - \sum_{i=1}^m x_i \bar{y}}{\sum_{i=1}^m x_i^2 - \sum_{i=1}^m x_i \bar{x}}\]
+\begin{equation}
+= \frac{\sum_{i=1}^m y_i(x_i - \bar{x})}{\sum_{i=1}^m x_i^2 - \frac{1}{m} (\sum_{i=1}^m x_i)^2}
+\end{equation}
+\subsection{Vectorization of \textit{w}}
+From (13) and $\frac{1}{m}(\sum_{i=1}^m x_i)^2 = \bar{x} \sum_{i=1}^m x_i = \sum_{i=1}^m x_i \bar{x} $ :
+\[w = \frac{\sum_{i=1}^m x_i y_i - \sum_{i=1}^m x_i \bar{y}}{\sum_{i=1}^m x_i^2 - \sum_{i=1}^m x_i \bar{x}}\]
+For:
+\begin{equation}
+\sum_{i=1}^m y_i \bar{x} = \bar{x} \sum_{i=1}^m y_i = \frac{1}{m} \sum_{i=1}^m x_i \sum_{i=1}^m y_i = \sum_{i=1}^m x_i \ast \frac{1}{m} \ast \sum_{i=1}^m y_i = \sum_{i=1}^m x_i \bar{y}
+\end{equation}
+\begin{equation}
+\sum_{i=1}^m y_i \bar{x} = bar{x} \sum_{i=1}^m y_i = \bar{x} \ast m \ast \frac{1}{m} \ast \sum_{i=1}^m y_i = m \bar{x}\bar{y} = \sum_{i=1}^m \bar{x}\bar{y}
+\end{equation}
+\begin{equation}
+\sum_{i=1}^m x_i \bar{x} = \bar{x} \sum_[i=1]^m x_i = \bar{x} \ast m \ast \frac{1}{m} \ast \sum_{i=1}^m x_i = m\bar{x}^2 = \sum_{i=1}^m \bar{x}^2
+\end{equation}
+From (14)(15)(16):
+\[w = \frac{\sum_{i=1}^m x_i y_i - \sum_{i=1}^m x_i \bar{y}}{\sum_{i=1}^m x_i^2 - \sum_{i=1}^m x_i \bar{x}} = \frac{\sum_{i=1}^m (y_i x_i - y_i \bar{x} - y_i \bar{x} + y_i \bar{x})}{\sum_{i=1}^m (x_i^2 - x_i\bar{x} - x_i\bar{x} + x_i\bar{x})}\] 
+\begin{equation}
+= \frac{\sum_{i=1}^m(y_i x_i - y_i \bar{x} - x_i \bar{y} + \bar{x}\bar{y})}{\sum_{i=1}^m (x_i^2 - x_i\bar{x} - x_i\bar{x} + \bar{x}^2)} = \frac{\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^m (x_i - \bar{x})^2}
+\end{equation}
+Suppose:
+\begin{equation}
+\boldsymbol{x} = (x_1, x_2, x_3,...,x_m)^T
+, \boldsymbol{x_d} = (x_1 - \bar{x}, x_2 - \bar{x},...,x_m - \bar{x})^T
+\end{equation}
+Similarly: 
+\begin{equation}
+\newline\boldsymbol{y} = (y_1, y_2, y_3,...,y_m)^T
+\newline\boldsymbol{y_d} = (y_1 - \bar{y}, y_2 - \bar{y},...,y_m - \bar{y})^T 
+\end{equation}
+From (17)(18)(19):
+\begin{equation}
+w = \frac{\sum_{i=1}^m (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^m (x_i - \bar{x})^2} = \frac{\boldsymbol{X_d}^T \boldsymbol{y_d}}{\boldsymbol{X_d}^T \boldsymbol{X_d}}
+\end{equation}
+
+\bibliographystyle{plain}
+\bibliography{mybibliography.bib}
+
+\end{document}
+
